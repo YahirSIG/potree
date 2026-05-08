@@ -37,5 +37,7 @@ pointclouds/
 *.las
 *.laz
 *.bin
+*.zip
+*.exe
 convert_log*.txt
 logo-video/node_modules/
