@@ -31,3 +31,11 @@ libs/CesiumUnminified
 /pointclouds/morro_bay_converted
 /pointclouds/helimap_epalinges
 pointclouds/F
+
+# Archivos pesados de nubes de puntos y conversión
+pointclouds/
+*.las
+*.laz
+*.bin
+convert_log*.txt
+logo-video/node_modules/

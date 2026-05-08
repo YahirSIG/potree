@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=800, height=800" />
+    <!-- Usamos Anime.js como indica la skill -->
+    <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.2/lib/anime.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html, body {
+        width: 1200px;
+        height: 400px;
+        overflow: hidden;
+        /* Fondo transparente para poder superponer el video en la web */
+        background: transparent;
+      }
+      #root {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .logo-container {
+        width: 400px;
+        height: 400px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        perspective: 1000px;
+      }
+      .logo {
+        flex: 1;
+        max-width: 300px;
+        height: 100%;
+        object-fit: contain;
+      }
+      .logo-bg {
+        background: white;
+        border-radius: 15px;
+        padding: 10px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+      }
+      .logo-invert {
+        filter: invert(1) brightness(2);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Composición de 4 segundos a 1200x400 -->
+    <div id="root" data-composition-id="main" data-start="0" data-duration="4" data-width="1200" data-height="400">
+      <div class="logo-container" style="width: 1000px; height: 300px; gap: 40px;">
+        <!-- Izquierda: ICIPLAM -->
+        <img class="logo" src="../assets/logo_iciplam.png" alt="iciplam">
+        <!-- Centro: SIGETUX (invertido a blanco porque es negro) -->
+        <img class="logo logo-invert" src="../assets/logo_sigetux.png" alt="SIGETUX">
+        <!-- Derecha: CSIYG -->
+        <img class="logo" src="../assets/csiyg.png" alt="csiyg">
+      </div>
+    </div>
+
+    <!-- Separamos el script como lo solicitaste -->
+    <script src="animation.js"></script>
+  </body>
+</html>

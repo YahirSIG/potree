@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="Portal interactivo de Nubes de Puntos LiDAR - Visor de elevación y color RGB.">
+	<title>Portal LiDAR | Visualización de Nubes de Puntos</title>
+
+	<!-- Google Fonts -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link
+		href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;500&display=swap"
+		rel="stylesheet">
+
+	<style>
+		:root {
+			/* Colores extraídos de los logos: ICIPLAM (Naranja vibrante), Ayuntamiento (Dorado), CSIyG (Gris Pizarra) */
+			--primary-color: #FBA100;
+			/* Naranja ICIPLAM */
+			--secondary-color: #CE893B;
+			/* Dorado Ayuntamiento */
+			--bg-dark: #1E2326;
+			/* Fondo oscuro elegante */
+			--slate-gray: #66747A;
+			/* Gris del logo CSIyG */
+			--text-light: #f8fafc;
+			--card-bg: rgba(255, 255, 255, 0.05);
+			--card-border: rgba(255, 255, 255, 0.1);
+		}
+
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+
+		body {
+			font-family: 'Inter', sans-serif;
+			background-color: var(--bg-dark);
+			color: var(--text-light);
+			min-height: 100vh;
+			/* Fondo sutil con gradiente usando el Gris CSIyG y Naranja oscuro */
+			background-image:
+				radial-gradient(circle at 15% 50%, rgba(102, 116, 122, 0.15), transparent 30%),
+				radial-gradient(circle at 85% 30%, rgba(251, 161, 0, 0.08), transparent 30%);
+			overflow-x: hidden;
+		}
+
+		/* Nav */
+		nav {
+			padding: 2rem 4rem;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+		/* Logos Nav */
+		.logos-container {
+			display: flex;
+			align-items: center;
+			gap: 2.5rem;
+			justify-content: center;
+			/* Centrar los logos */
+			width: 100%;
+		}
+
+		.nav-logo {
+			height: 65px;
+			/* Tamaño ajustado para visibilidad */
+			object-fit: contain;
+			filter: drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.4));
+			transition: transform 0.3s ease;
+		}
+
+		.nav-logo:hover {
+			transform: scale(1.05);
+		}
+
+		/* Hero Section */
+		.hero {
+			text-align: center;
+			padding: 5rem 3rem 5rem;
+			max-width: 1290px;
+			margin: 0 auto;
+		}
+
+		.hero-video {
+			width: 100%;
+			/* Ocupa el ancho del hero */
+			height: auto;
+			/* Mantiene la proporción sin deformarse */
+			margin: 0 auto 1rem;
+			display: block;
+			pointer-events: none;
+		}
+
+		.hero h1 {
+			font-family: 'Outfit', sans-serif;
+			font-size: 4rem;
+			font-weight: 800;
+			line-height: 1.1;
+			margin-bottom: 1.5rem;
+		}
+
+		.hero h1 span {
+			color: var(--primary-color);
+		}
+
+		.hero p {
+			font-size: 1.1rem;
+			color: #a0aec0;
+			margin-bottom: 2.5rem;
+			line-height: 1.6;
+		}
+
+		/* Grid de Proyectos */
+		.projects-container {
+			max-width: 1200px;
+			margin: 0 auto;
+			padding: 2rem;
+		}
+
+		.section-title {
+			font-family: 'Outfit', sans-serif;
+			font-size: 2rem;
+			margin-bottom: 2rem;
+			text-align: center;
+			font-weight: 600;
+		}
+
+		.grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+			gap: 2rem;
+		}
+
+		/* Tarjetas Glassmorphism */
+		.card {
+			background: var(--card-bg);
+			border: 1px solid var(--card-border);
+			border-radius: 20px;
+			padding: 2rem;
+			backdrop-filter: blur(10px);
+			-webkit-backdrop-filter: blur(10px);
+			transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+			text-decoration: none;
+			color: inherit;
+			display: flex;
+			flex-direction: column;
+			position: relative;
+			overflow: hidden;
+		}
+
+		.card::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
+			opacity: 0;
+			transition: opacity 0.4s ease;
+			z-index: 0;
+		}
+
+		.card:hover {
+			transform: translateY(-10px);
+			border-color: rgba(251, 161, 0, 0.3);
+			box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4),
+				0 0 20px rgba(251, 161, 0, 0.1);
+		}
+
+		.card:hover::before {
+			opacity: 1;
+		}
+
+		.card-content {
+			position: relative;
+			z-index: 1;
+		}
+
+		.card-tag {
+			font-size: 0.75rem;
+			text-transform: uppercase;
+			letter-spacing: 1.5px;
+			font-weight: 600;
+			color: var(--primary-color);
+			margin-bottom: 1rem;
+			display: inline-block;
+			background: rgba(251, 161, 0, 0.1);
+			padding: 0.4rem 0.8rem;
+			border-radius: 50px;
+		}
+
+		.card h2 {
+			font-family: 'Outfit', sans-serif;
+			font-size: 1.8rem;
+			margin-bottom: 1rem;
+			font-weight: 600;
+		}
+
+		.card p {
+			color: #a0aec0;
+			font-size: 0.95rem;
+			line-height: 1.5;
+			margin-bottom: 2rem;
+			flex-grow: 1;
+		}
+
+		.btn-view {
+			align-self: flex-start;
+			padding: 0.8rem 1.8rem;
+			border-radius: 50px;
+			background: transparent;
+			color: #fff;
+			border: 1px solid var(--primary-color);
+			font-weight: 500;
+			font-size: 0.9rem;
+			cursor: pointer;
+			transition: all 0.3s ease;
+			display: flex;
+			align-items: center;
+			gap: 8px;
+		}
+
+		.btn-view svg {
+			width: 16px;
+			height: 16px;
+			transition: transform 0.3s ease;
+		}
+
+		.card:hover .btn-view {
+			background: var(--primary-color);
+			color: #000;
+			box-shadow: 0 0 15px rgba(251, 161, 0, 0.4);
+		}
+
+		.card:hover .btn-view svg {
+			transform: translateX(4px);
+		}
+
+		/* Footer */
+		footer {
+			text-align: center;
+			padding: 4rem 2rem;
+			color: #4a5568;
+			font-size: 0.9rem;
+		}
+
+		/* Responsive */
+		@media (max-width: 768px) {
+			.hero h1 {
+				font-size: 2.8rem;
+			}
+
+			nav {
+				padding: 1.5rem 1rem;
+			}
+
+			.logos-container {
+				gap: 1rem;
+				flex-wrap: wrap;
+			}
+
+			.nav-logo {
+				height: 45px;
+			}
+		}
+	</style>
+</head>
+
+<body>
+
+	<nav>
+		<div class="logos-container">
+			<!-- Recuerda guardar estas imágenes en la carpeta 'assets' -->
+			<img src="assets/quevivatuxtla_png.png" alt="Ayuntamiento Tuxtla Gutiérrez" class="nav-logo"
+				style="border-radius: 8px; padding: 5px;">
+			<img src="assets/ayuntamiento-logovertical-letras-blancas-web.png" alt="ICIPLAM" class="nav-logo"
+				style="border-radius: 8px; padding: 5px;">
+			<!-- <img src="assets/logo_csiyg.png" alt="CSIyG" class="nav-logo" style="border-radius: 50%;"> -->
+		</div>
+	</nav>
+
+	<header class="hero">
+		<video src="assets/sigetux_girando.webm" autoplay loop muted playsinline class="hero-video"></video>
+		<h1>Explora el territorio en <span>Tres Dimensiones</span></h1>
+		<p>Plataforma interactiva para la visualización, análisis y recorrido de nubes de puntos LiDAR. Selecciona uno
+			de los mapas disponibles para comenzar la exploración.</p>
+	</header>
+
+	<main class="projects-container">
+		<h2 class="section-title">Mapas Disponibles</h2>
+
+		<div class="grid">
+
+			<!-- Tarjeta 1: Sabinal Elevación -->
+			<a href="sabinal_elevacion.html" class="card">
+				<div class="card-content">
+					<span class="card-tag">Rampa de Elevación</span>
+					<h2>Sabinal (Alturas)</h2>
+					<p>Visualización topográfica del proyecto Sabinal. Utiliza una rampa de color (Spectral) para
+						destacar las diferencias de elevación del terreno y estructuras.</p>
+					<div class="btn-view">
+						Abrir Visor
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+							stroke-linecap="round" stroke-linejoin="round">
+							<line x1="5" y1="12" x2="19" y2="12"></line>
+							<polyline points="12 5 19 12 12 19"></polyline>
+						</svg>
+					</div>
+				</div>
+			</a>
+
+			<!-- Tarjeta 2: Sabinal RGB -->
+			<a href="sabinal_color.html" class="card">
+				<div class="card-content">
+					<span class="card-tag">Color Real (RGB)</span>
+					<h2>Sabinal (Realista)</h2>
+					<p>Visualización hiperrealista del proyecto Sabinal. Los puntos LiDAR han sido coloreados utilizando
+						ortofotos de alta resolución para un análisis visual detallado.</p>
+					<div class="btn-view">
+						Abrir Visor
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+							stroke-linecap="round" stroke-linejoin="round">
+							<line x1="5" y1="12" x2="19" y2="12"></line>
+							<polyline points="12 5 19 12 12 19"></polyline>
+						</svg>
+					</div>
+				</div>
+			</a>
+
+			<!-- Tarjeta 3: Próximamente (Placeholder) -->
+			<div class="card" style="opacity: 0.6; cursor: default;">
+				<div class="card-content">
+					<span class="card-tag"
+						style="background: rgba(160, 174, 192, 0.1); color: #a0aec0;">Próximamente</span>
+					<h2>Nuevo Proyecto</h2>
+					<p>Espacio reservado para futuras nubes de puntos LiDAR que se incorporen a la plataforma
+						gubernamental.</p>
+					<div class="btn-view" style="border-color: #4a5568; color: #4a5568;">
+						Pronto
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</main>
+
+	<footer>
+		<p>&copy; 2026 Portal de Nubes de Puntos. Sistema desarrollado para análisis espacial avanzado.</p>
+	</footer>
+
+</body>
+
+</html>
