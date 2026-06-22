@@ -300,7 +300,8 @@ export class Sidebar{
 		let elObjects = elScene.next().find("#scene_objects");
 		let elProperties = elScene.next().find("#scene_object_properties");
 		
-
+		// Exportación comentada temporalmente por temas de privacidad
+		/*
 		{
 			let elExport = elScene.next().find("#scene_export");
 
@@ -349,7 +350,7 @@ export class Sidebar{
 
 			let elDownloadPotree = elExport.find("img[name=potree_export_button]").parent();
 			elDownloadPotree.click( (event) => {
-
+   
 				let data = Potree.saveProject(this.viewer);
 				let dataString = JSON5.stringify(data, null, "\t")
 
@@ -357,6 +358,7 @@ export class Sidebar{
 				elDownloadPotree.attr('href', url);
 			});
 		}
+		*/
 
 		let propertiesPanel = new PropertiesPanel(elProperties, this.viewer);
 		propertiesPanel.setScene(this.viewer.scene);

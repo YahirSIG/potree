@@ -53,6 +53,9 @@
 			$("#menu_tools").next().show();
 			$("#menu_clipping").next().show();
 			viewer.toggleSidebar();
+
+			// Ocultar exportación (JSON, DXF, Potree) forzando desde la vista
+			$("#scene_export").hide();
 		});
 
 		// Carga la nube de puntos

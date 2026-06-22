@@ -263,6 +263,8 @@ export class ProfileWindow extends EventDispatcher {
 		let backwardIcon = `${exports.resourcePath}/icons/arrow_down.svg`;
 		$('#potree_profile_move_backward').attr('src', backwardIcon);
 
+		// Iconos de exportación comentados por privacidad
+		/*
 		let dxf2DIcon = `${exports.resourcePath}/icons/file_dxf_2d.svg`;
 		$('#potree_download_dxf2D_icon').attr('src', dxf2DIcon);
 
@@ -274,6 +276,7 @@ export class ProfileWindow extends EventDispatcher {
 
 		let lasIcon = `${exports.resourcePath}/icons/file_las_3d.svg`;
 		$('#potree_download_las_icon').attr('src', lasIcon);
+		*/
 
 		let closeIcon = `${exports.resourcePath}/icons/close.svg`;
 		$('#closeProfileContainer').attr("src", closeIcon);
@@ -512,6 +515,8 @@ export class ProfileWindow extends EventDispatcher {
 			return points;
 		};
 
+		// Eventos de exportación comentados por privacidad
+		/*
 		$('#potree_download_dxf2D_icon').click(() => {
 			
 			const points = getProfilePoints();
@@ -551,6 +556,7 @@ export class ProfileWindow extends EventDispatcher {
 			let blob = new Blob([buffer], {type: "application/octet-binary"});
 			$('#potree_download_profile_link').attr('href', URL.createObjectURL(blob));
 		});
+		*/
 	}
 
 	selectPoint (mileage, elevation, radius) {
